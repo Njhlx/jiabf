@@ -19,20 +19,26 @@ def get_user_data():
         for col in range(CONST.DATA_START_COLUMN - 1):
             user_d_info[CONST.TITLE_DATA[col]] = CONST.DATA.row_values(row)[col]
         user_name = CONST.DATA.row_values(row)[CONST.NAME_COLUMN]
-        if user_name == CONST.CURR_NAME:
-            print(user_name)
+        # if user_name == CONST.CURR_NAME:
+        #     print(user_name)
+        #加班次数
         user_d_info["加班次数"] = 0
+        #加班餐费金额
+        user_d_info["加班餐费"] = 0
         for col in range(CONST.DATA_START_COLUMN - 1,len(CONST.TITLE_DATA)):
             title = CONST.TITLE_DATA[col]
             data = CONST.DATA.row_values(row)[col]
             hour_data = get_working_hours(title, data)
 
+            #打印单个人的信息
             # if user_name == CONST.CURR_NAME:
             #     print("--------------------------------------------------")
             #     print(title)
             #     print(hour_data)
             #     print("--------------------------------------------------")
+
             user_d_info["加班次数"] = user_d_info["加班次数"] + hour_data["加班次数"]
+            user_d_info["加班餐费"] = user_d_info["加班餐费"] + hour_data["加班餐费"]
         user_info[CONST.DATA.row_values(row)[0]] = user_d_info
     CONST.USER_DATA = user_info
     print("计算人员信息数据 完成")
@@ -42,11 +48,17 @@ def get_user_data():
 def get_working_hours(title, data):
     result = dict()
     result["加班次数"] = 0
+    result["加班餐费"] = 0
+
+    #去除打卡时间为空的
+    if data == "":
+        return result
 
     s_str_time, e_str_time = data.split("\n")
     s_time = convert_str_time_to_int(s_str_time.strip())
     e_time = convert_str_time_to_int(e_str_time.strip())
     overtime_time = convert_str_time_to_int(CONST.OVERTIME_TIME)
+    overtime_money = CONST.OVERTIME_MONEY
 
     #跨午夜
     if e_time < s_time:
@@ -57,26 +69,22 @@ def get_working_hours(title, data):
     if e_time > overtime_time :
         overtimes = 0
         overtimes = overtimes + 1
+
         if check_working_day(title):
             # 工作日
             result["加班次数"] = overtimes
+            result["加班餐费"] = overtimes * overtime_money
+            # print(result)
         else:
             # 非工作日
             if check_arrive(s_time):
-                result["加班次数"] = overtimes + 1
+                overtimes = overtimes + 1
+                result["加班次数"] = overtimes
+                result["加班餐费"] = overtimes * overtime_money
             else:
                 result["加班次数"] = overtimes
-        return result
-    # if check_working_day(title):
-    #     # 工作日
-    #     result["加班次数"] = overtimes
-    # else:
-    #     # 非工作日
-    #     if check_arrive(s_time):
-    #         result["加班次数"] = overtimes + 1
-    #     else:
-    #         result["加班次数"] = overtimes
-    # return result
+                result["加班餐费"] = overtimes * overtime_money
+    return result
 
 # 工作日判断
 def check_working_day(title):
