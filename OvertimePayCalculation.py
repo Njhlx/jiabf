@@ -91,9 +91,9 @@ def check_working_day(title):
     return title.isdigit()
 
 
-# 判断 非工作日是否上午到达
+# 判断 非工作日是否上午到达（10:30到达）
 def check_arrive(s_time):
-    if s_time > 600:
+    if s_time > 630:
         return False
     else:
         return True
