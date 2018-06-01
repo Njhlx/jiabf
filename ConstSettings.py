@@ -4,7 +4,7 @@ CONST = Common.const
 
 def define():
     # Excel路径位置
-    CONST.FILE_PATH = r"D:\PycharmProjects\jiabf\Data\201804.xls"
+    CONST.FILE_PATH = r"D:\PycharmProjects\jiabf\Data\201805.xls"
     # Excel中数据源Sheet的名称
     CONST.SHEET_NAME = "打卡时间"
     # Excel中输出Sheet的名称
