@@ -31,11 +31,11 @@ def get_user_data():
             hour_data = get_working_hours(title, data)
 
             #打印单个人的信息
-            # if user_name == CONST.CURR_NAME:
-            #     print("--------------------------------------------------")
-            #     print(title)
-            #     print(hour_data)
-            #     print("--------------------------------------------------")
+            if user_name == CONST.CURR_NAME:
+                print("--------------------------------------------------")
+                print(title)
+                print(hour_data)
+                print("--------------------------------------------------")
 
             user_d_info["加班次数"] = user_d_info["加班次数"] + hour_data["加班次数"]
             user_d_info["加班餐费"] = user_d_info["加班餐费"] + hour_data["加班餐费"]
@@ -66,37 +66,47 @@ def get_working_hours(title, data):
     else:
         e_time = e_time
 
-    if e_time > overtime_time :
-        overtimes = 0
-        overtimes = overtimes + 1
+    # 加班次数
+    overtimes = 0
 
-        if check_working_day(title):
-            # 工作日
+    # 工作日加班餐费
+    if check_working_day(title):
+        # 工作日
+        if e_time >= overtime_time:
+            overtimes = overtimes + 1
             result["加班次数"] = overtimes
             result["加班餐费"] = overtimes * overtime_money
             # print(result)
-        else:
-            # 非工作日
-            if check_arrive(s_time):
+
+    #   非工作日加班餐费
+    else:
+        if e_time >= overtime_time:
+            overtimes = overtimes + 1
+            result["加班次数"] = overtimes
+            result["加班餐费"] = overtimes * overtime_money
+            if check_arrive(s_time, e_time):
                 overtimes = overtimes + 1
                 result["加班次数"] = overtimes
                 result["加班餐费"] = overtimes * overtime_money
-            else:
-                result["加班次数"] = overtimes
-                result["加班餐费"] = overtimes * overtime_money
+        elif check_arrive(s_time, e_time):
+            overtimes = overtimes + 1
+            result["加班次数"] = overtimes
+            result["加班餐费"] = overtimes * overtime_money
     return result
+
+
 
 # 工作日判断
 def check_working_day(title):
     return title.isdigit()
 
 
-# 判断 非工作日是否上午到达（10:30到达）
-def check_arrive(s_time):
-    if s_time > 630:
-        return False
-    else:
+# 判断 非工作日加班餐费(12:00前上班打卡，并且上班时间大于等于4个小时）
+def check_arrive(s_time,e_time):
+    if s_time <= 720 and (e_time - s_time) >= 240 :
         return True
+    else:
+        return False
 
 
 # 将时间转换为分钟数

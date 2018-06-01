@@ -4,7 +4,7 @@ CONST = Common.const
 
 def define():
     # Excel路径位置
-    CONST.FILE_PATH = r"D:\PycharmProjects\jiabf\Data\201805.xls"
+    CONST.FILE_PATH = r"D:\PycharmProjects\jiabf\Data\201804.xls"
     # Excel中数据源Sheet的名称
     CONST.SHEET_NAME = "打卡时间"
     # Excel中输出Sheet的名称
@@ -14,7 +14,7 @@ def define():
     #姓名所在列
     CONST.NAME_COLUMN = 0
     #当前输出人员名称
-    CONST.CURR_NAME = "孔凡军"
+    CONST.CURR_NAME = "曲丙年"
     # 打卡时间开始列数
     CONST.DATA_START_COLUMN = 6
     # 时间正则表达式
